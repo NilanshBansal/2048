@@ -17,13 +17,12 @@ $(document).ready(function () {
 
 
     function insertNewNo() {
-        console.log("insert called");
         while (true) {
             var randx = Math.floor(Math.random() * 4);
             var randy = Math.floor(Math.random() * 4);
 
             if (grid[randx][randy] == ' ') {
-                console.log(randx,randy);
+
                 var randno = Math.floor(Math.random() * 10);
                 if (randno <= 8) {
                     grid[randx][randy] = 2;
@@ -112,122 +111,247 @@ $(document).ready(function () {
     }
 
 
+
     function moveUp() {
-        var empty;
+
+        for (var j = 0; j < 4; j++) {
+            shift(j, "up");
+        }
+
+        //ADDING SCORES
+
         for (var j = 0; j < 4; j++) {
             for (var i = 1; i < 4; i++) {
+                if (grid[i][j] == ' ') {
+                    break;
+                }
 
                 if (grid[i][j] != ' ') {
-                    for (var x = i - 1; x >= 0; x--) {
-                        if (grid[x][j] == ' ') {
-                            empty = x;
-                        }
-                    }
+                    if (grid[i][j] == grid[i - 1][j]) {
 
-
-                    if (empty != undefined) {
-                        grid[empty][j] = grid[i][j];
+                        grid[i - 1][j] *= 2;
+                        score += grid[i - 1][j];
                         grid[i][j] = ' ';
                     }
-
                 }
+                shift(j, "up");
             }
         }
+
         display();
         insertNewNo();
     }
 
     function moveDown() {
-        var empty;
+
+
+        for (var j = 0; j < 4; j++) {
+            shift(j, "down");
+        }
+
+        //ADD SCORES
+
         for (var j = 0; j < 4; j++) {
             for (var i = 2; i >= 0; i--) {
+                if (grid[i][j] == ' ') {
+                    break;
+                }
 
                 if (grid[i][j] != ' ') {
-                    for (var x = i + 1; x < 4; x++) {
-                        if (grid[x][j] == ' ') {
-                            empty = x;
-                        }
-                    }
+                    if (grid[i][j] == grid[i + 1][j]) {
 
-
-                    if (empty != undefined) {
-                        grid[empty][j] = grid[i][j];
+                        grid[i + 1][j] *= 2;
+                        score += grid[i + 1][j];
                         grid[i][j] = ' ';
                     }
                 }
+                shift(j, "down");
             }
         }
+
         display();
         insertNewNo();
     }
 
     function moveLeft() {
-        var empty;
+
+
+        for (var j = 0; j < 4; j++) {
+            shift(j, "left");
+        }
+
+        //ADD SCORES
+
         for (var i = 0; i < 4; i++) {
             for (var j = 1; j < 4; j++) {
 
+                if (grid[i][j] == ' ') {
+                    break;
+                }
+
                 if (grid[i][j] != ' ') {
-                    for (var x = j - 1; x >= 0; x--) {
-                        if (grid[i][x] == ' ') {
-                            empty = x;
-                        }
-                    }
+                    if (grid[i][j] == grid[i][j - 1]) {
 
-
-                    if (empty != undefined) {
-                        grid[i][empty] = grid[i][j];
+                        grid[i][j - 1] *= 2;
+                        score += grid[i][j - 1];
                         grid[i][j] = ' ';
                     }
-
                 }
+                shift(i, "left");
+
+
             }
         }
+
+
         display();
         insertNewNo();
 
     }
 
     function moveRight() {
-        var empty;
+
+
+        for (var j = 0; j < 4; j++) {
+            shift(j, "right");
+        }
+
+
+
+        //ADD SCORES
+
+
         for (var i = 0; i < 4; i++) {
             for (var j = 2; j >= 0; j--) {
 
-                if (grid[i][j] != ' ') {
-                    for (var x = j + 1; x < 4; x++) {
-                        if (grid[i][x] == ' ') {
-                            empty = x;
-                        }
-                    }
+                if (grid[i][j] == ' ') {
+                    break;
+                }
 
-                    if (empty != undefined) {
-                        grid[i][empty] = grid[i][j];
+                if (grid[i][j] != ' ') {
+                    if (grid[i][j] == grid[i][j + 1]) {
+
+                        grid[i][j + 1] *= 2;
+                        score += grid[i][j + 1];
                         grid[i][j] = ' ';
                     }
                 }
+                shift(i, "right");
+
+
             }
         }
         display();
         insertNewNo();
-
-
-        //Call add
 
     }
 
 
 
 
+    function shift(index, operation) {
+        if (operation == "down") {
+            var empty = undefined;
+            for (var i = 2; i >= 0; i--) {
+
+                if (grid[i][index] != ' ') {
+                    for (var x = i + 1; x < 4; x++) {
+                        if (grid[x][index] == ' ') {
+                            empty = x;
+                        }
+                    }
+
+
+                    if (empty != undefined) {
+                        grid[empty][index] = grid[i][index];
+                        grid[i][index] = ' ';
+                        empty = undefined;
+                    }
+                }
+            }
 
 
 
 
+        }
+
+        else if (operation == "up") {
+
+            var empty = undefined;
+            for (var i = 1; i < 4; i++) {
+
+                if (grid[i][index] != ' ') {
+                    for (var x = i - 1; x >= 0; x--) {
+                        if (grid[x][index] == ' ') {
+                            empty = x;
+                        }
+                    }
+
+
+                    if (empty != undefined) {
+                        grid[empty][index] = grid[i][index];
+                        grid[i][index] = ' ';
+                        empty = undefined;
+                    }
+
+                }
+            }
 
 
 
 
+        }
+
+        else if (operation == "right") {
+
+
+            var empty;
+            for (var j = 2; j >= 0; j--) {
+
+                if (grid[index][j] != ' ') {
+                    for (var x = j + 1; x < 4; x++) {
+                        if (grid[index][x] == ' ') {
+                            empty = x;
+                        }
+                    }
+
+                    if (empty != undefined) {
+                        grid[index][empty] = grid[index][j];
+                        grid[index][j] = ' ';
+                        empty = undefined;
+                    }
+                }
+            }
 
 
 
+        }
+        else if (operation == "left") {
 
+            var empty;
+            for (var j = 1; j < 4; j++) {
+
+                if (grid[index][j] != ' ') {
+                    for (var x = j - 1; x >= 0; x--) {
+                        if (grid[index][x] == ' ') {
+                            empty = x;
+                        }
+                    }
+
+
+                    if (empty != undefined) {
+                        grid[index][empty] = grid[index][j];
+                        grid[index][j] = ' ';
+                        empty = undefined;
+                    }
+
+                }
+            }
+
+
+
+        }
+
+    }
 
 })
